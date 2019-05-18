@@ -39,8 +39,17 @@ namespace AuthApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        public async Task<ActionResult<User>> Register(User user)
         {
+            var _user = await _context.Users.SingleOrDefaultAsync(
+                u => u.Username == user.Username
+            );
+
+            if (_user != null)
+            {
+                return BadRequest(new { error = "Username already taken" });
+            }
+
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
