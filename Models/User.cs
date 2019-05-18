@@ -1,4 +1,4 @@
-namespace AuthApi
+namespace AuthApi.Models
 {
     public class User
     {
