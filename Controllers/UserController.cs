@@ -38,7 +38,7 @@ namespace AuthApi.Controllers
             return user;
         }
 
-        [HttpPost]
+        [HttpPost("register")]
         public async Task<ActionResult<User>> Register(User user)
         {
             var _user = await _context.Users.SingleOrDefaultAsync(
