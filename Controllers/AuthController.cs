@@ -41,6 +41,7 @@ namespace AuthApi.Controllers
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
+            user.Password = null;
             return user;
         }
 
