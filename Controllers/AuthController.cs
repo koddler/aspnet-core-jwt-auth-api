@@ -16,7 +16,7 @@ using AuthApi.Models;
 namespace AuthApi.Controllers
 {
     [ApiController]
-    [Route("api/")]
+    [Route("auth/")]
     public class AuthController : ControllerBase
     {
         private readonly UserContext _context;
@@ -27,7 +27,7 @@ namespace AuthApi.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(User user)
+        public async Task<ActionResult<User>> Registration(User user)
         {
             var _user = await _context.Users.SingleOrDefaultAsync(
                 u => u.Username == user.Username
