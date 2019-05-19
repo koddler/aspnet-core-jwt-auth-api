@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -14,8 +15,9 @@ using AuthApi.Models;
 
 namespace AuthApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
+    [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
         private readonly UserContext _context;
@@ -26,9 +28,15 @@ namespace AuthApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public IEnumerable<User> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            var users = _context.Users.ToList();
+            var _users = users.Select(user =>
+            {
+                user.Password = null;
+                return user;
+            });
+            return _users;
         }
 
         [HttpGet("{id}")]
@@ -41,9 +49,11 @@ namespace AuthApi.Controllers
                 return NotFound();
             }
 
+            user.Password = null;
             return user;
         }
 
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult<User>> Register(User user)
         {
@@ -62,6 +72,7 @@ namespace AuthApi.Controllers
             return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult<object>> Login(User user)
         {
